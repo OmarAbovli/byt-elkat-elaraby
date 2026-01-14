@@ -171,6 +171,12 @@ const FamilyTreePage = () => {
                                         <img
                                             src={work.image}
                                             alt={work.title}
+                                            loading="lazy"
+                                            decoding="async"
+                                            onError={(e) => {
+                                                console.error(`Failed to load image: ${work.image}`);
+                                                e.currentTarget.src = '/logo.webp';
+                                            }}
                                             className="w-full aspect-[3/4] object-cover object-top transition-transform duration-700 group-hover:scale-110"
                                         />
                                     </div>
