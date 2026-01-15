@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Play, Award, Users, BookOpen, Sparkles } from "lucide-react";
+import { Play, Award, Users, BookOpen, Feather } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-main.png";
 import { useEffect, useState } from "react";
@@ -75,7 +75,7 @@ const Hero = () => {
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md mb-8"
           >
-            <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+            <Feather className="w-4 h-4 text-accent animate-pulse" />
             <span className="text-foreground/90 text-sm font-medium font-cairo">
               أكاديمية الخط العربي الأولى عالمياً
             </span>
