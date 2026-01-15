@@ -9,6 +9,8 @@ import { db } from "@/lib/db";
 import { posts } from "@/lib/schema";
 import { eq, desc } from "drizzle-orm";
 import { Link } from "react-router-dom";
+import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const BlogPage = () => {
     const [postsList, setPostsList] = useState<any[]>([]);
@@ -35,10 +37,15 @@ const BlogPage = () => {
 
     return (
         <div className="min-h-screen bg-background">
+            <SEO
+                title="المدونة"
+                description="مقالات ودروس حصرية في فن الخط العربي. تعلم النقد الفني، وتاريخ الخط، وأحدث الأدوات والتقنيات."
+            />
             <Navbar />
 
             <section className="pt-32 pb-20 relative">
                 <div className="container mx-auto px-6">
+                    <Breadcrumbs items={[{ label: "المدونة" }]} />
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

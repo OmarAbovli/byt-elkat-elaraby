@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { enrollments, courses, certificates, packageCourses, pathCourses } from "@/lib/schema";
 import { eq, sql, inArray } from "drizzle-orm";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -152,15 +153,15 @@ const Dashboard = () => {
                                 <p className="text-sm text-muted-foreground">معدل الإكمال</p>
                             </div>
                         </div>
-                        <div className="card-luxury p-6 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                        <Link to="/my-certificates" className="card-luxury p-6 flex items-center gap-4 hover:border-gold/50 transition-colors cursor-pointer group">
+                            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:text-gold group-hover:bg-gold/10 transition-colors">
                                 <Award className="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold font-cairo">{stats.certificates}</h3>
+                                <h3 className="text-2xl font-bold font-cairo text-foreground">{stats.certificates}</h3>
                                 <p className="text-sm text-muted-foreground">شهادات مكتسبة</p>
                             </div>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="mb-8">

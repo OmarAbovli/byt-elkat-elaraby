@@ -7,9 +7,15 @@ import Footer from "@/components/Footer";
 import ProductsSection from "@/components/ProductsSection";
 import BlogPreview from "@/components/BlogPreview";
 
+import SEO from "@/components/SEO";
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <SEO
+        title="الرئيسية"
+        description="بيت الخط العربي: المنصة الأولى عالمياً لتعليم فن الخط العربي. دورات احترافية، أدوات، ومجتمع نابض بالحياة."
+      />
       <Navbar />
       <Hero />
       <Features />

@@ -28,7 +28,7 @@ const VideoPlayer = ({ url, title }: VideoPlayerProps) => {
                     src={url}
                     loading="lazy"
                     style={{ border: 0, position: "absolute", top: 0, height: "100%", width: "100%" }}
-                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen"
                     allowFullScreen={true}
                     onLoad={() => setIsLoading(false)}
                     title={title}

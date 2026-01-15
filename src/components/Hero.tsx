@@ -9,6 +9,7 @@ import { courses, profiles, enrollments } from "@/lib/schema";
 import { sql } from "drizzle-orm";
 import { Link } from "react-router-dom";
 import CalligraphyTitle from "./CalligraphyTitle";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Hero = () => {
   const [counts, setCounts] = useState({
@@ -21,6 +22,7 @@ const Hero = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        // Fetch counts using raw sql or aggregation
         const coursesCount = await db.select({ count: sql<number>`count(*)` }).from(courses);
         const studentsCount = await db.select({ count: sql<number>`count(*)` }).from(profiles);
         const enrollmentsCount = await db.select({ count: sql<number>`count(*)` }).from(enrollments);
@@ -41,9 +43,24 @@ const Hero = () => {
   }, []);
 
   const stats = [
-    { icon: BookOpen, value: isLoading ? "..." : `+${counts.courses}`, label: "دورة تعليمية", color: "text-primary" },
-    { icon: Users, value: isLoading ? "..." : `+${counts.students}`, label: "طالب مسجل", color: "text-accent" },
-    { icon: Award, value: isLoading ? "..." : "100%", label: "شهادات معتمدة", color: "text-primary" },
+    {
+      icon: BookOpen,
+      value: isLoading ? <Skeleton className="h-10 w-24 bg-primary/20" /> : `+${counts.courses}`,
+      label: "دورة تعليمية",
+      color: "text-primary"
+    },
+    {
+      icon: Users,
+      value: isLoading ? <Skeleton className="h-10 w-24 bg-accent/20" /> : `+${counts.students}`,
+      label: "طالب مسجل",
+      color: "text-accent"
+    },
+    {
+      icon: Award,
+      value: isLoading ? <Skeleton className="h-10 w-24 bg-primary/20" /> : "100%",
+      label: "شهادات معتمدة",
+      color: "text-primary"
+    },
   ];
 
   return (

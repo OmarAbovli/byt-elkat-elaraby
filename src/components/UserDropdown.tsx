@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/providers/AuthProvider";
-import { User, Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { User, Settings, LogOut, LayoutDashboard, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const UserDropdown = () => {
@@ -49,6 +49,12 @@ const UserDropdown = () => {
                     <Link to="/profile">
                         <User className="mr-2 h-4 w-4 ml-2" />
                         <span>الملف الشخصي</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="font-cairo cursor-pointer" asChild>
+                    <Link to="/my-certificates">
+                        <Award className="mr-2 h-4 w-4 ml-2" />
+                        <span>شهاداتي</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="font-cairo cursor-pointer" asChild>

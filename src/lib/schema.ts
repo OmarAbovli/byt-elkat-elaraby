@@ -53,6 +53,7 @@ export const courses = pgTable('courses', {
     currency: text('currency').default('USD'),
     studentsCount: integer('students_count').default(0),
     rating: decimal('rating', { precision: 3, scale: 2 }).default('0'),
+    certificateSettings: jsonb('certificate_settings').default({}), // Stores { theme, borderColor, logo, signature }
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -105,6 +106,7 @@ export const enrollments = pgTable('enrollments', {
     enrolledAt: timestamp('enrolled_at').defaultNow(),
     expiresAt: timestamp('expires_at'),
     progressPercent: integer('progress_percent').default(0),
+    completedLessons: jsonb('completed_lessons').default([]), // Array of lesson IDs
     completedAt: timestamp('completed_at'),
 });
 

@@ -9,6 +9,9 @@ import { db } from "@/lib/db";
 import { courses } from "@/lib/schema";
 import { eq, desc } from "drizzle-orm";
 import { Link } from "react-router-dom";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import SEO from "@/components/SEO";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CoursesPage = () => {
     const [coursesList, setCoursesList] = useState<any[]>([]);
@@ -35,12 +38,18 @@ const CoursesPage = () => {
 
     return (
         <div className="min-h-screen bg-background">
+            <SEO
+                title="الدورات التعليمية"
+                description="تصفح مجموعة واسعة من دورات الخط العربي لجميع المستويات. تعلم خط النسخ، الرقعة، الديواني، والمزيد من كبار الخطاطين."
+            />
             <Navbar />
 
             <section className="pt-32 pb-20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold-dark/5 blur-[120px] rounded-full -rotate-12 translate-x-1/2 -translate-y-1/2" />
 
                 <div className="container mx-auto px-6">
+                    <Breadcrumbs items={[{ label: "الدورات التعليمية" }]} />
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -71,11 +80,14 @@ const CoursesPage = () => {
 
                     {isLoading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="card-luxury p-4 animate-pulse">
-                                    <div className="aspect-video bg-muted rounded-lg mb-4" />
-                                    <div className="h-6 bg-muted rounded w-3/4 mb-4" />
-                                    <div className="h-4 bg-muted rounded w-1/2" />
+                            {[1, 2, 3, 4, 5, 6].map(i => (
+                                <div key={i} className="card-luxury p-4">
+                                    <Skeleton className="aspect-video w-full rounded-lg mb-4 bg-muted/50" />
+                                    <Skeleton className="h-6 w-3/4 mb-4 bg-muted/50" />
+                                    <div className="flex justify-between items-center mt-auto">
+                                        <Skeleton className="h-4 w-1/3 bg-muted/50" />
+                                        <Skeleton className="h-8 w-24 rounded-full bg-muted/50" />
+                                    </div>
                                 </div>
                             ))}
                         </div>

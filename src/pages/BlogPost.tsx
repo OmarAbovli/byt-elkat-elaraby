@@ -9,6 +9,8 @@ import { posts } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
+import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const BlogPost = () => {
     const { slug } = useParams();
@@ -75,10 +77,17 @@ const BlogPost = () => {
 
     return (
         <div className="min-h-screen bg-background">
+            <SEO
+                title={post.title}
+                description={post.excerpt}
+                image={post.coverImage}
+                type="article"
+            />
             <Navbar />
 
             <article className="pt-32 pb-20 overflow-hidden">
                 <div className="container mx-auto px-6">
+                    <Breadcrumbs items={[{ label: "المدونة", href: "/blog" }, { label: post.title }]} />
                     <div className="max-w-4xl mx-auto">
                         {/* Post Header */}
                         <motion.header
