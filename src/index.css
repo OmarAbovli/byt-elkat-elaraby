@@ -8,95 +8,82 @@
 
 @layer base {
   :root {
-    /* Dark Luxury Theme - Deep obsidian with emerald and gold accents */
-    --background: 160 20% 4%;
-    --foreground: 45 30% 92%;
+    /* Dark Blue Theme - Deep navy with electric blue and orange accents */
+    /* Background: #0E1A2A -> hsl(214, 49%, 11%) */
+    --background: 214 49% 11%;
+    /* Foreground: #FFFFFF -> hsl(0, 0%, 100%) */
+    --foreground: 0 0% 100%;
 
-    --card: 160 15% 8%;
-    --card-foreground: 45 30% 92%;
+    /* Card: #14253D -> hsl(215, 50%, 16%) */
+    --card: 215 50% 16%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 160 15% 6%;
-    --popover-foreground: 45 30% 92%;
+    /* Popover matches card */
+    --popover: 215 50% 16%;
+    --popover-foreground: 0 0% 100%;
 
-    /* Emerald Green - Primary brand color */
-    --primary: 160 60% 35%;
-    --primary-foreground: 45 30% 95%;
+    /* Primary: #2EB6E8 -> hsl(196, 79%, 54%) */
+    --primary: 196 79% 54%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Warm Ivory - Secondary */
-    --secondary: 45 25% 15%;
-    --secondary-foreground: 45 30% 92%;
+    /* Secondary: #1E3A5F -> hsl(214, 52%, 25%) - Lighter navy for secondary actions */
+    --secondary: 214 52% 25%;
+    --secondary-foreground: 0 0% 95%;
 
-    /* Muted tones */
-    --muted: 160 10% 15%;
-    --muted-foreground: 45 15% 55%;
+    /* Muted: #0F172A -> hsl(222, 47%, 11%) */
+    --muted: 222 47% 11%;
+    --muted-foreground: 215 20% 65%; /* Soft gray blue */
 
-    /* Gold Accent */
-    --accent: 40 70% 50%;
-    --accent-foreground: 160 20% 4%;
+    /* Accent: #F39C12 -> hsl(37, 90%, 51%) */
+    --accent: 37 90% 51%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 50%;
-    --destructive-foreground: 45 30% 95%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 160 15% 18%;
-    --input: 160 15% 12%;
-    --ring: 160 60% 35%;
+    /* Border: #1E293B -> hsl(215, 32%, 17%) */
+    --border: 215 32% 17%;
+    --input: 215 32% 17%;
+    --ring: 196 79% 54%;
 
-    --radius: 0.75rem;
-
-    /* Custom luxury variables */
-    --gold: 40 70% 50%;
-    --gold-light: 40 60% 65%;
-    --gold-dark: 35 80% 40%;
-    --emerald: 160 60% 35%;
-    --emerald-light: 160 50% 45%;
-    --emerald-dark: 160 70% 20%;
-    --ivory: 45 30% 92%;
-    --ivory-muted: 45 20% 75%;
-    --obsidian: 160 20% 4%;
-    --obsidian-light: 160 15% 10%;
-
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(40, 70%, 50%), hsl(35, 80%, 40%));
-    --gradient-emerald: linear-gradient(135deg, hsl(160, 60%, 35%), hsl(160, 70%, 20%));
-    --gradient-luxury: linear-gradient(135deg, hsl(160, 20%, 4%), hsl(160, 15%, 10%));
-    --gradient-hero: linear-gradient(180deg, transparent 0%, hsl(160, 20%, 4%) 100%);
-
-    /* Shadows */
-    --shadow-glow-gold: 0 0 40px hsl(40, 70%, 50%, 0.3);
-    --shadow-glow-emerald: 0 0 40px hsl(160, 60%, 35%, 0.3);
-    --shadow-luxury: 0 25px 50px -12px hsl(0, 0%, 0%, 0.5);
+    --radius: 1rem; /* More rounded as per reference */
 
     /* Sidebar */
-    --sidebar-background: 160 15% 6%;
-    --sidebar-foreground: 45 30% 92%;
-    --sidebar-primary: 160 60% 35%;
-    --sidebar-primary-foreground: 45 30% 95%;
-    --sidebar-accent: 160 15% 12%;
-    --sidebar-accent-foreground: 45 30% 92%;
-    --sidebar-border: 160 15% 18%;
-    --sidebar-ring: 160 60% 35%;
+    --sidebar-background: 214 49% 11%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 196 79% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 50% 16%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 32% 17%;
+    --sidebar-ring: 196 79% 54%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(180deg, transparent 0%, hsl(214, 49%, 11%) 100%);
+    --gradient-glow: radial-gradient(circle at center, hsl(196, 79%, 54%, 0.15) 0%, transparent 70%);
   }
 
   .dark {
-    --background: 160 20% 4%;
-    --foreground: 45 30% 92%;
-    --card: 160 15% 8%;
-    --card-foreground: 45 30% 92%;
-    --popover: 160 15% 6%;
-    --popover-foreground: 45 30% 92%;
-    --primary: 160 60% 35%;
-    --primary-foreground: 45 30% 95%;
-    --secondary: 45 25% 15%;
-    --secondary-foreground: 45 30% 92%;
-    --muted: 160 10% 15%;
-    --muted-foreground: 45 15% 55%;
-    --accent: 40 70% 50%;
-    --accent-foreground: 160 20% 4%;
+    /* Same values since we are forcing dark mode look primarily */
+    --background: 214 49% 11%;
+    --foreground: 0 0% 100%;
+    --card: 215 50% 16%;
+    --card-foreground: 0 0% 100%;
+    --popover: 215 50% 16%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 196 79% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 52% 25%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 222 47% 11%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 37 90% 51%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 50%;
-    --destructive-foreground: 45 30% 95%;
-    --border: 160 15% 18%;
-    --input: 160 15% 12%;
-    --ring: 160 60% 35%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 32% 17%;
+    --input: 215 32% 17%;
+    --ring: 196 79% 54%;
   }
 }
 

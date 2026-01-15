@@ -57,34 +57,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
-        },
-        emerald: {
-          DEFAULT: "hsl(var(--emerald))",
-          light: "hsl(var(--emerald-light))",
-          dark: "hsl(var(--emerald-dark))",
-        },
-        ivory: {
-          DEFAULT: "hsl(var(--ivory))",
-          muted: "hsl(var(--ivory-muted))",
-        },
-        obsidian: {
-          DEFAULT: "hsl(var(--obsidian))",
-          light: "hsl(var(--obsidian-light))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        // Extended Semantic Colors
+        // Using Accent for "Gold/Orange" concepts
+        // Using Primary for "Blue/Emerald" concepts
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -117,8 +92,8 @@ export default {
           to: { backgroundPosition: "200% center" },
         },
         glow: {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(40 70% 50% / 0.2)" },
-          "50%": { boxShadow: "0 0 40px hsl(40 70% 50% / 0.4)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.2)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.4)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
@@ -136,14 +111,13 @@ export default {
         float: "float 6s ease-in-out infinite",
       },
       backgroundImage: {
-        "gradient-gold": "linear-gradient(135deg, hsl(40 70% 50%), hsl(35 80% 40%))",
-        "gradient-emerald": "linear-gradient(135deg, hsl(160 60% 35%), hsl(160 70% 20%))",
-        "gradient-luxury": "linear-gradient(135deg, hsl(160 20% 4%), hsl(160 15% 10%))",
+        "gradient-primary": "linear-gradient(135deg, hsl(var(--primary)), hsl(214, 52%, 25%))",
+        "gradient-accent": "linear-gradient(135deg, hsl(var(--accent)), hsl(35, 80%, 40%))",
       },
       boxShadow: {
-        "glow-gold": "0 0 40px hsl(40 70% 50% / 0.3)",
-        "glow-emerald": "0 0 40px hsl(160 60% 35% / 0.3)",
-        luxury: "0 25px 50px -12px hsl(0 0% 0% / 0.5)",
+        "glow-primary": "0 0 40px hsl(var(--primary) / 0.3)",
+        "glow-accent": "0 0 40px hsl(var(--accent) / 0.3)",
+        luxury: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
       },
     },
   },
