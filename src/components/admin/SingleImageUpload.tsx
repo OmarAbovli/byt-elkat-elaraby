@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from "@/components/ui/button";
-import { X, Upload, Loader2, Image as ImageIcon } from "lucide-react";
+import { X, Upload, Loader2, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SingleImageUploadProps {
@@ -10,6 +10,7 @@ interface SingleImageUploadProps {
     onRemove: () => void;
     disabled?: boolean;
     label?: string;
+    maxSizeMB?: number;
 }
 
 const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
@@ -17,9 +18,11 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
     onChange,
     onRemove,
     disabled,
-    label = "اضغط أو اسحب صورة للرفع"
+    label = "اضغط أو اسحب ملف للرفع",
+    maxSizeMB = 10
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [fileName, setFileName] = useState<string | null>(null);
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
@@ -27,6 +30,15 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
         setIsLoading(true);
         try {
             const file = acceptedFiles[0];
+
+            // Check file size
+            if (file.size > maxSizeMB * 1024 * 1024) {
+                alert(`حجم الملف أكبر من ${maxSizeMB} ميجابايت`);
+                setIsLoading(false);
+                return;
+            }
+
+            setFileName(file.name);
             const reader = new FileReader();
             const result = await new Promise<string>((resolve, reject) => {
                 reader.onload = () => resolve(reader.result as string);
@@ -39,30 +51,30 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [onChange]);
+    }, [onChange, maxSizeMB]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: {
-            'image/jpeg': [],
-            'image/png': [],
-            'image/webp': [],
-            'image/svg+xml': []
-        },
+        // Accept any file type
         disabled: disabled || isLoading,
-        multiple: false
+        multiple: false,
+        maxSize: maxSizeMB * 1024 * 1024
     });
+
+    const isImage = value && (value.startsWith('data:image') || value.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i));
+    const isPDF = value && value.startsWith('data:application/pdf');
 
     return (
         <div className="space-y-4">
             {value ? (
-                <div className="relative aspect-video rounded-lg overflow-hidden border border-border group max-w-sm mx-auto">
+                <div className="relative rounded-lg overflow-hidden border border-border group max-w-sm mx-auto">
                     <div className="absolute top-2 right-2 z-10">
                         <Button
                             type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onRemove();
+                                setFileName(null);
                             }}
                             variant="destructive"
                             size="icon"
@@ -71,11 +83,23 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
                             <X className="h-5 w-5" />
                         </Button>
                     </div>
-                    <img
-                        src={value}
-                        alt="Uploaded"
-                        className="object-cover w-full h-full"
-                    />
+                    {isImage ? (
+                        <div className="aspect-video">
+                            <img
+                                src={value}
+                                alt="Uploaded"
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                    ) : (
+                        <div className="p-6 flex flex-col items-center gap-2 bg-secondary/20">
+                            <FileText className="h-12 w-12 text-gold" />
+                            <p className="text-sm text-muted-foreground font-cairo truncate max-w-full">
+                                {fileName || (isPDF ? "ملف PDF" : "ملف مرفق")}
+                            </p>
+                            <p className="text-xs text-muted-foreground/60 font-cairo">تم رفع الملف بنجاح</p>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div
@@ -94,11 +118,11 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
                     )}
                     <div className="text-sm text-center text-muted-foreground font-cairo">
                         {isDragActive ? (
-                            <p>افلت الصورة هنا</p>
+                            <p>افلت الملف هنا</p>
                         ) : (
                             <p>{label}</p>
                         )}
-                        <p className="text-xs mt-1 text-muted-foreground/60">JPG, PNG, WebP (Max 5MB)</p>
+                        <p className="text-xs mt-1 text-muted-foreground/60">أي نوع ملف (حد أقصى {maxSizeMB} ميجا)</p>
                     </div>
                 </div>
             )}

@@ -6,15 +6,19 @@ interface SEOProps {
     description?: string;
     image?: string;
     url?: string;
-    type?: "website" | "article";
+    type?: "website" | "article" | "product";
+    keywords?: string;
+    schema?: object;
 }
 
 const SEO = ({
     title,
-    description = "تعلم فن الخط العربي بأسلوب عصري من كبار الخطاطين. دورات تعليمية شاملة، أدوات احترافية، وشهادات معتمدة من بيت الخط العربي.",
+    description = "تعلم فن الخط العربي بأسلوب عصري من كبار الخطاطين. دورات تعليمية شاملة، تصميم شجره العائله،أدوات احترافية، وشهادات معتمدة من بيت الخط العربي.",
     image = "/logo.webp",
     url = "https://baytalkhattal-arabi.com",
-    type = "website"
+    type = "website",
+    keywords,
+    schema
 }: SEOProps) => {
     const siteTitle = "بيت الخط العربي | Bayt Al Khatt Al Arabi";
     const fullTitle = `${title} | بيت الخط العربي`;
@@ -23,7 +27,7 @@ const SEO = ({
     const legacyDomain = "https://baytalkhatt.com/";
 
     // Organization Schema for Knowledge Graph
-    const schema = {
+    const baseSchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "بيت الخط العربي",
@@ -38,11 +42,14 @@ const SEO = ({
         ]
     };
 
+    const finalSchema = schema || baseSchema;
+
     return (
         <Helmet>
             {/* Standard Meta Tags */}
             <title>{fullTitle}</title>
             <meta name="description" content={description} />
+            {keywords && <meta name="keywords" content={keywords} />}
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta charSet="utf-8" />
             <link rel="canonical" href={url} />
@@ -65,7 +72,7 @@ const SEO = ({
 
             {/* Schema.org for Google Knowledge Graph */}
             <script type="application/ld+json">
-                {JSON.stringify(schema)}
+                {JSON.stringify(finalSchema)}
             </script>
         </Helmet>
     );

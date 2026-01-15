@@ -4,52 +4,108 @@ import { forwardRef } from "react";
 // Note: In a real app, we might use @react-pdf/renderer for generating actual PDFs,
 // but for now we'll create a printable HTML component.
 
+
 interface CertificateProps {
     studentName: string;
     courseName: string;
     date: Date;
     certificateId: string;
+    ref?: React.Ref<HTMLDivElement>;
+    settings?: any; // New settings prop
 }
 
-const Certificate = forwardRef<HTMLDivElement, CertificateProps>(({ studentName, courseName, date, certificateId }, ref) => {
+const Certificate = forwardRef<HTMLDivElement, CertificateProps>(({ studentName, courseName, date, certificateId, settings }, ref) => {
+
+    // Custom Mode Renderer
+    if (settings?.mode === 'custom' && settings.background) {
+        return (
+            <div
+                ref={ref}
+                className="relative bg-white shadow-xl overflow-hidden print:shadow-none"
+                style={{
+                    width: '1123px', // A4 Landscape @ 96 DPI (approx)
+                    height: '794px',
+                    backgroundImage: `url(${settings.background})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    position: 'relative'
+                }}
+            >
+                {settings.elements?.map((el: any) => {
+                    let content: React.ReactNode = el.content;
+
+                    // Replace placeholders
+                    if (el.type === 'studentName') content = studentName;
+                    if (el.type === 'courseName') content = courseName;
+                    if (el.type === 'date') content = date.toLocaleDateString('ar-EG');
+                    if (el.type === 'serialNumber') content = certificateId;
+                    if (el.type === 'qrCode') {
+                        content = (
+                            <img
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${window.location.origin}/verify/${certificateId}`}
+                                alt="QR Code"
+                                className="w-full h-full object-contain"
+                            />
+                        );
+                    }
+                    if (el.type === 'signature') {
+                        content = el.signatureUrl ? (
+                            <img src={el.signatureUrl} alt="Signature" className="w-full h-full object-contain" />
+                        ) : null;
+                    }
+
+                    return (
+                        <div
+                            key={el.id}
+                            style={{
+                                position: 'absolute',
+                                left: `${el.x}px`,
+                                top: `${el.y}px`,
+                                fontSize: `${el.fontSize}px`,
+                                color: el.color,
+                                fontFamily: el.fontFamily,
+                                fontWeight: el.fontWeight,
+                                fontStyle: el.fontStyle,
+                                textAlign: el.textAlign,
+                                width: el.width ? `${el.width}px` : 'auto',
+                                height: el.type === 'qrCode' || el.type === 'signature' ? `${el.width}px` : 'auto',
+                                whiteSpace: 'nowrap',
+                                direction: 'ltr' // Reset direction to handle absolute positioning correctly, text align handles RTL
+                            }}
+                        >
+                            {content}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+
+    // Default "Luxurious" Template (Fallback)
     return (
-        <div
-            ref={ref}
-            className="w-[1123px] h-[794px] bg-[#fff] relative overflow-hidden flex flex-col items-center text-center font-amiri text-foreground shadow-2xl"
-            style={{
-                direction: 'rtl'
-            }}
-        >
-            {/* Background Pattern & Gradient */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-neutral-50 to-neutral-100 z-0" />
+        <div ref={ref} className="relative w-[1123px] h-[794px] bg-white text-gray-800 font-sans shadow-xl overflow-hidden print:shadow-none flex flex-col justify-between" dir="rtl">
 
-            {/* Inner Border Frame - Double Line */}
-            <div className="absolute inset-6 border-[3px] border-[#D4AF37] z-10" />
-            <div className="absolute inset-8 border border-[#D4AF37]/50 z-10" />
+            {/* Decorative border frame */}
+            <div className="absolute inset-2 border-4 border-[#D4AF37] z-10 pointer-events-none" />
+            <div className="absolute inset-4 border border-[#056d6a]/30 z-10 pointer-events-none" />
 
-            {/* Corner Ornaments - Islamic Star Pattern CSS */}
-            <div className="absolute top-6 left-6 w-32 h-32 z-20 pointer-events-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full text-[#D4AF37] fill-current opacity-80">
-                    <path d="M0,0 L40,0 L0,40 Z" />
+            {/* Corners */}
+            <div className="absolute top-0 right-0 w-32 h-32 z-0">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-[#056d6a] fill-current opacity-20">
+                    <path d="M0 0 L100 0 L100 20 C60 20 20 60 20 100 L0 100 Z" />
                 </svg>
             </div>
-            <div className="absolute top-6 right-6 w-32 h-32 z-20 pointer-events-none rotate-90">
-                <svg viewBox="0 0 100 100" className="w-full h-full text-[#D4AF37] fill-current opacity-80">
-                    <path d="M0,0 L40,0 L0,40 Z" />
-                </svg>
-            </div>
-            <div className="absolute bottom-6 left-6 w-32 h-32 z-20 pointer-events-none -rotate-90">
-                <svg viewBox="0 0 100 100" className="w-full h-full text-[#D4AF37] fill-current opacity-80">
-                    <path d="M0,0 L40,0 L0,40 Z" />
-                </svg>
-            </div>
-            <div className="absolute bottom-6 right-6 w-32 h-32 z-20 pointer-events-none rotate-180">
-                <svg viewBox="0 0 100 100" className="w-full h-full text-[#D4AF37] fill-current opacity-80">
-                    <path d="M0,0 L40,0 L0,40 Z" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 z-0 rotate-180">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-[#056d6a] fill-current opacity-20">
+                    <path d="M0 0 L100 0 L100 20 C60 20 20 60 20 100 L0 100 Z" />
                 </svg>
             </div>
 
-            {/* Content Container */}
+            {/* Background Pattern */}
+            <div className="absolute inset-0 z-0 opacity-[0.03]"
+                style={{ backgroundImage: 'radial-gradient(circle at center, #D4AF37 1px, transparent 1px)', backgroundSize: '30px 30px' }}
+            />
+
             <div className="relative z-30 flex flex-col h-full w-full px-24 py-16 justify-between">
 
                 {/* Header */}

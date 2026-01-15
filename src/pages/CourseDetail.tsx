@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Play, Lock, Clock, BookOpen, CheckCircle2, ChevronLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -111,8 +112,42 @@ const CourseDetail = () => {
         return <div className="min-h-screen bg-background flex items-center justify-center font-cairo">الدورة غير موجودة</div>;
     }
 
+    const courseSchema = {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": course.title,
+        "description": course.description,
+        "provider": {
+            "@type": "Organization",
+            "name": "بيت الخط العربي",
+            "sameAs": "https://baytalkhattal-arabi.com"
+        },
+        "image": course.coverImage,
+        "offers": {
+            "@type": "Offer",
+            "category": "Paid",
+            "priceCurrency": "USD",
+            "price": course.price,
+            "availability": "https://schema.org/InStock"
+        },
+        "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "Online",
+            "courseWorkload": `PT${course.durationHours}H`
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background" dir="rtl">
+            <SEO
+                title={course.title}
+                description={course.description}
+                image={course.coverImage}
+                url={`https://baytalkhattal-arabi.com/course/${course.slug}`}
+                type="article"
+                keywords={`تعلم الخط العربي, ${course.title}, دورات خط عربي, محمد بيومي, ${course.title} online`}
+                schema={courseSchema}
+            />
             <Navbar />
 
             <main className="pt-32 pb-20">

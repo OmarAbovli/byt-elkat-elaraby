@@ -110,13 +110,23 @@ export const enrollments = pgTable('enrollments', {
     completedAt: timestamp('completed_at'),
 });
 
+export const certificateTemplates = pgTable('certificate_templates', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    name: text('name').notNull(),
+    settings: jsonb('settings').default({}), // Stores { theme, elements, background, etc }
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+
 export const certificates = pgTable('certificates', {
     id: uuid('id').defaultRandom().primaryKey(),
     userId: uuid('user_id').notNull(),
-    courseId: uuid('course_id').references(() => courses.id),
+    courseId: uuid('course_id').references(() => courses.id), // Made nullable
+    templateId: uuid('template_id').references(() => certificateTemplates.id), // Link to standalone template
     certificateNumber: text('certificate_number').unique().notNull(),
     issuedAt: timestamp('issued_at').defaultNow(),
-    pdfUrl: text('pdf_url'),
+    pdfUrl: text('pdf_url'), // Generated PDF URL
+    attachmentUrl: text('attachment_url'), // Manually uploaded PDF/Image
     qrCode: text('qr_code'),
 });
 

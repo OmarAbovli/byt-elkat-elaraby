@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const familyTreeWorks = [
     {
@@ -66,8 +67,59 @@ const familyTreeWorks = [
 ];
 
 const FamilyTreePage = () => {
+    const keywords = "بيت الخط العربي, تصميم شجرة العائلة, تعلم فن الخطاطة, تعلم الخط العربي, تصميم شجرة العائلة بشكل احترافي, خدمة تصميم شجرة العائلة, محمد بيومي, استاذ محمد بيومي, mohamed bayomy, mohammed bayomy, مشجرات, أنساب, توثيق العائلة";
+
+    const serviceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "تصميم وشجرة العائلة",
+        "provider": {
+            "@type": "Organization",
+            "name": "بيت الخط العربي",
+            "url": "https://baytalkhattal-arabi.com"
+        },
+        "description": "خدمة احترافية لتصميم وتوثيق شجرة العائلة بأي حجم، مع ترميز لوني دقيق وجودة طباعة عالية.",
+        "areaServed": "Global",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "خدمات التصميم",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "تصميم شجرة عائلة صغيرة (200-400 اسم)"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "تصميم شجرة عائلة متوسطة (600-1400 اسم)"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "تصميم شجرة عائلة كبيرة (1600-3100+ اسم)"
+                    }
+                }
+            ]
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
+            <SEO
+                title="خدمة تصميم شجرة العائلة الاحترافية"
+                description="نوثق تاريخ عائلتكم في لوحة فنية تجمع بين أصالة الخط العربي ودقة التصميم. صمم شجرة عائلتك الآن مع الأستاذ محمد بيومي في بيت الخط العربي."
+                keywords={keywords}
+                image="/family-trees/tree-3100.jpg"
+                url="https://baytalkhattal-arabi.com/family-tree"
+                type="product"
+                schema={serviceSchema}
+            />
             <Navbar />
 
             {/* Hero Section */}

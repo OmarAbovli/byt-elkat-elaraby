@@ -46,7 +46,7 @@ const UserDropdown = () => {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="font-cairo cursor-pointer" asChild>
-                    <Link to="/profile">
+                    <Link to="/settings">
                         <User className="mr-2 h-4 w-4 ml-2" />
                         <span>الملف الشخصي</span>
                     </Link>
@@ -55,12 +55,6 @@ const UserDropdown = () => {
                     <Link to="/my-certificates">
                         <Award className="mr-2 h-4 w-4 ml-2" />
                         <span>شهاداتي</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="font-cairo cursor-pointer" asChild>
-                    <Link to="/settings">
-                        <Settings className="mr-2 h-4 w-4 ml-2" />
-                        <span>الإعدادات</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

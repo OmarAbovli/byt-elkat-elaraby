@@ -13,6 +13,7 @@ import {
   BarChart3,
   Route,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
 
@@ -30,6 +31,7 @@ const AdminSidebar = () => {
     { icon: Users, label: "المستخدمين", path: "/admin/users" },
     { icon: CreditCard, label: "المدفوعات", path: "/admin/payments" },
     { icon: Award, label: "الشهادات", path: "/admin/certificates" },
+    { icon: Mail, label: "الرسائل", path: "/admin/messages" },
     { icon: LayoutDashboard, label: "المدونة", path: "/admin/blog" },
     { icon: BarChart3, label: "الإحصائيات", path: "/admin/analytics" },
     { icon: Settings, label: "الإعدادات", path: "/admin/settings" },

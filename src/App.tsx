@@ -20,6 +20,8 @@ import Products from "./pages/admin/Products";
 import Users from "./pages/admin/Users";
 import Payments from "./pages/admin/Payments";
 import Certificates from "./pages/admin/Certificates";
+import CertificateBuilder from "./pages/admin/CertificateBuilder";
+import Messages from "./pages/admin/Messages";
 import Analytics from "./pages/admin/Analytics";
 import Settings from "./pages/admin/Settings";
 import StudentDashboard from "./pages/student/Dashboard";
@@ -86,6 +88,9 @@ const App = () => (
                 <Route path="users" element={<Users />} />
                 <Route path="payments" element={<Payments />} />
                 <Route path="certificates" element={<Certificates />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="courses/:id/builder" element={<CertificateBuilder />} />
+                <Route path="templates/:id/builder" element={<CertificateBuilder />} />
                 <Route path="analytics" element={<Analytics />} />
                 <Route path="settings" element={<Settings />} />
               </Route>

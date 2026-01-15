@@ -8,6 +8,7 @@ import {
   EyeOff,
   Loader2,
   Search,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,9 +69,9 @@ const Courses = () => {
     coverImage: "",
     level: "beginner",
     durationHours: 0,
-    isPublished: false,
     isFree: false,
     price: 0,
+    certificateMode: 'auto', // 'auto' or 'custom'
   });
 
   const fetchCourses = useCallback(async () => {
@@ -147,6 +148,11 @@ const Courses = () => {
         slug,
         price: formData.price.toString(),
         durationHours: formData.durationHours,
+        certificateSettings: {
+          // Preserve existing settings if any, but update mode
+          ...(editingCourse ? (editingCourse as any).certificateSettings : {}),
+          mode: formData.certificateMode
+        }
       };
 
       if (editingCourse) {
@@ -222,11 +228,15 @@ const Courses = () => {
       isPublished: false,
       isFree: false,
       price: 0,
+      certificateMode: 'auto',
     });
   };
 
   const openEditDialog = (course: Course) => {
     setEditingCourse(course);
+    // Safe cast for jsonb settings
+    const certSettings = (course as any).certificateSettings || {};
+
     setFormData({
       title: course.title,
       titleEn: course.titleEn || "",
@@ -238,6 +248,7 @@ const Courses = () => {
       isPublished: course.isPublished || false,
       isFree: course.isFree || false,
       price: parseFloat(course.price || "0"),
+      certificateMode: certSettings.mode || 'auto',
     });
     setIsDialogOpen(true);
   };
@@ -407,6 +418,51 @@ const Courses = () => {
                     <Label htmlFor="isPublished">نشر الدورة</Label>
                   </div>
                 </div>
+
+                <div className="border-t border-border pt-4">
+                  <Label className="font-cairo mb-2 block text-gold">إعدادات الشهادة</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div
+                      className={`p-4 border rounded-xl cursor-pointer transition-all ${formData.certificateMode !== 'custom' ? 'border-gold bg-gold/10' : 'border-border hover:border-gold/50'}`}
+                      onClick={() => setFormData({ ...formData, certificateMode: 'auto' })}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${formData.certificateMode !== 'custom' ? 'border-gold' : 'border-muted-foreground'}`}>
+                          {formData.certificateMode !== 'custom' && <div className="w-2 h-2 rounded-full bg-gold" />}
+                        </div>
+                        <span className="font-bold font-cairo text-sm">تلقائي (الفاخر)</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">استخدام تصميم الشهادة الافتراضي الفاخر للنظام.</p>
+                    </div>
+
+                    <div
+                      className={`p-4 border rounded-xl cursor-pointer transition-all ${formData.certificateMode === 'custom' ? 'border-gold bg-gold/10' : 'border-border hover:border-gold/50'}`}
+                      onClick={() => setFormData({ ...formData, certificateMode: 'custom' })}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${formData.certificateMode === 'custom' ? 'border-gold' : 'border-muted-foreground'}`}>
+                          {formData.certificateMode === 'custom' && <div className="w-2 h-2 rounded-full bg-gold" />}
+                        </div>
+                        <span className="font-bold font-cairo text-sm">مخصص (Builder)</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">تصميم شهادة خاصة لهذه الدورة باستخدام المصمم.</p>
+                    </div>
+                  </div>
+
+                  {formData.certificateMode === 'custom' && editingCourse && (
+                    <div className="mt-4 flex justify-end">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="gap-2 border-gold text-gold hover:bg-gold/10"
+                        onClick={() => window.location.href = `/admin/courses/${editingCourse.id}/builder`}
+                      >
+                        <Palette className="w-4 h-4" />
+                        فتح مصمم الشهادات
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -516,6 +572,13 @@ const Courses = () => {
                           ) : (
                             <Eye className="w-4 h-4 text-gold" />
                           )}
+                        </button>
+                        <button
+                          onClick={() => window.location.href = `/admin/courses/${course.id}/builder`}
+                          className="p-2 rounded-lg hover:bg-muted transition-colors"
+                          title="تصميم الشهادة"
+                        >
+                          <Palette className="w-4 h-4 text-gold" />
                         </button>
                         <button
                           onClick={() => openEditDialog(course)}

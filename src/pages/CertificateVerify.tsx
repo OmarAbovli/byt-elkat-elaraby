@@ -1,13 +1,13 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Loader2, Search, CheckCircle2, XCircle, Award, Calendar, User } from "lucide-react";
+import { Loader2, Search, CheckCircle2, XCircle, Award, Calendar, User, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { db } from "@/lib/db";
-import { certificates, courses, profiles } from "@/lib/schema";
+import { certificates, courses, profiles, certificateTemplates } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { motion } from "framer-motion";
 
@@ -34,27 +34,22 @@ const CertificateVerify = () => {
         setHasSearched(true);
 
         try {
-            // Find certificate by serial number (certificateNumber)
-            // Join with course and profile to get details
-            const certs = await db
+            // Fetch certificate with potential joins
+            const certData = await db
                 .select({
                     certificate: certificates,
-                    course: courses,
+                    course: courses,     // Can be null
+                    template: certificateTemplates, // Can be null
                     student: profiles
                 })
                 .from(certificates)
-                .innerJoin(courses, eq(certificates.courseId, courses.id))
-                // Note: user_id in certificates table might refer to auth user ID or profile ID. 
-                // Based on schema 'userId: uuid('user_id'),' and profiles 'userId: uuid('user_id'), id: uuid('id')...'
-                // We should typically join certificates.userId = profiles.userId OR profiles.id depending on how it was saved.
-                // In LessonView we saved it using user.id. 
-                // Let's assume certificates.userId matches profiles.id (if profiles.id is the master ID) OR profiles.userId.
-                // Since we use useAuth().user.id which often maps to profiles.id in this app setup:
-                .innerJoin(profiles, eq(certificates.userId, profiles.id)) // Trying direct match first
+                .leftJoin(courses, eq(certificates.courseId, courses.id))
+                .leftJoin(certificateTemplates, eq(certificates.templateId, certificateTemplates.id))
+                .innerJoin(profiles, eq(certificates.userId, profiles.id))
                 .where(eq(certificates.certificateNumber, serial));
 
-            if (certs && certs.length > 0) {
-                setResult(certs[0]);
+            if (certData && certData.length > 0) {
+                setResult(certData[0]);
             } else {
                 setError("لم يتم العثور على شهادة بهذا الرقم التسلسلي. يرجى التحقق وإعادة المحاولة.");
             }
@@ -71,6 +66,14 @@ const CertificateVerify = () => {
         if (serialNumber.trim()) {
             navigate(`/verify/${serialNumber.trim()}`);
         }
+    };
+
+    // Helper to determine title
+    const getCertificateTitle = (res: any) => {
+        if (res.course) return res.course.title;
+        if (res.template) return res.template.name;
+        if (res.certificate.attachmentUrl) return "شهادة خارجية";
+        return "شهادة تقدير";
     };
 
     return (
@@ -134,7 +137,7 @@ const CertificateVerify = () => {
                                                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
                                                     <User className="w-5 h-5" />
                                                 </div>
-                                                <p className="text-xl font-bold text-foreground">{result.student.fullName}</p>
+                                                <p className="text-xl font-bold text-foreground">{result.student.fullName || result.student.username}</p>
                                             </div>
                                         </div>
                                         <div className="space-y-2">
@@ -151,11 +154,24 @@ const CertificateVerify = () => {
                                     </div>
 
                                     <div className="pt-6 border-t border-border">
-                                        <label className="text-sm text-muted-foreground font-cairo mb-2 block">الدورة التدريبية</label>
-                                        <div className="bg-muted/30 p-4 rounded-xl border border-border">
+                                        <label className="text-sm text-muted-foreground font-cairo mb-2 block">تفاصيل الشهادة</label>
+                                        <div className="bg-muted/30 p-4 rounded-xl border border-border space-y-4">
                                             <p className="text-2xl font-bold text-gold-gradient font-amiri text-center">
-                                                {result.course.title}
+                                                {getCertificateTitle(result)}
                                             </p>
+
+                                            {result.certificate.attachmentUrl && (
+                                                <div className="text-center pt-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => window.open(result.certificate.attachmentUrl, '_blank')}
+                                                        className="font-cairo gap-2"
+                                                    >
+                                                        <FileText className="w-4 h-4" />
+                                                        عرض ملف الشهادة المرفق
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 

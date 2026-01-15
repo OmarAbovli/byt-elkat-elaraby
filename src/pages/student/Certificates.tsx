@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { Loader2, Award, Download, ExternalLink } from "lucide-react";
+import { Loader2, Award, Download, ExternalLink, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
-import { certificates, courses } from "@/lib/schema";
+import { certificates, courses, certificateTemplates } from "@/lib/schema";
 import { desc, eq } from "drizzle-orm";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +16,8 @@ interface MyCertificate {
     issuedAt: Date | null;
     courseTitle: string | null;
     courseId: string | null;
+    templateName: string | null;
+    attachmentUrl: string | null;
 }
 
 const StudentCertificates = () => {
@@ -35,9 +37,12 @@ const StudentCertificates = () => {
                         issuedAt: certificates.issuedAt,
                         courseTitle: courses.title,
                         courseId: courses.id,
+                        templateName: certificateTemplates.name,
+                        attachmentUrl: certificates.attachmentUrl,
                     })
                     .from(certificates)
-                    .innerJoin(courses, eq(certificates.courseId, courses.id))
+                    .leftJoin(courses, eq(certificates.courseId, courses.id))
+                    .leftJoin(certificateTemplates, eq(certificates.templateId, certificateTemplates.id))
                     .where(eq(certificates.userId, user.id))
                     .orderBy(desc(certificates.issuedAt));
 
@@ -53,12 +58,20 @@ const StudentCertificates = () => {
         fetchData();
     }, [user, toast]);
 
-    const handleDownload = (certId: string) => {
-        // Since we don't have a real PDF generation backend yet, 
-        // we can redirect to the preview page with a query param or ID
-        // For MVP: Redirect to the generic preview page but ideally it should load SPECIFIC certificate data.
-        // We will repurpose the preview page to load by ID if present, or just show a success message.
-        window.open(`/certificate-preview?id=${certId}`, '_blank');
+    const handleDownload = (cert: MyCertificate) => {
+        if (cert.attachmentUrl) {
+            window.open(cert.attachmentUrl, '_blank');
+        } else {
+            // For generated certs
+            window.open(`/certificate-preview?id=${cert.id}`, '_blank');
+        }
+    };
+
+    const getCertificateTitle = (cert: MyCertificate) => {
+        if (cert.courseTitle) return cert.courseTitle;
+        if (cert.templateName) return cert.templateName;
+        if (cert.attachmentUrl) return "شهادة خارجية";
+        return "شهادة تقدير";
     };
 
     return (
@@ -100,7 +113,7 @@ const StudentCertificates = () => {
                             <div className="bg-gradient-to-l from-gold/10 to-primary/5 p-8 flex flex-col items-center justify-center border-b border-border/50 relative overflow-hidden">
                                 <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
                                 <Award className="w-16 h-16 text-gold mb-4 drop-shadow-md group-hover:scale-110 transition-transform duration-500" />
-                                <h3 className="font-bold text-lg font-amiri text-center text-foreground">{cert.courseTitle}</h3>
+                                <h3 className="font-bold text-lg font-amiri text-center text-foreground">{getCertificateTitle(cert)}</h3>
                             </div>
 
                             <div className="p-6 space-y-4">
@@ -118,13 +131,16 @@ const StudentCertificates = () => {
                                 <div className="pt-4 flex gap-2">
                                     <Button
                                         className="flex-1 gap-2 font-cairo bg-gradient-to-r from-gold to-amber-600 hover:from-amber-600 hover:to-gold text-white border-none shadow-lg shadow-gold/20"
-                                        onClick={() => handleDownload(cert.id)}
+                                        onClick={() => handleDownload(cert)}
                                     >
-                                        <Download className="w-4 h-4" /> تحميل PDF
+                                        {cert.attachmentUrl ? <FileText className="w-4 h-4" /> : <Download className="w-4 h-4" />}
+                                        {cert.attachmentUrl ? "عرض الملف" : "تحميل PDF"}
                                     </Button>
-                                    <Button variant="outline" size="icon" className="border-gold/30 text-gold hover:bg-gold/10" title="تحقق">
-                                        <ExternalLink className="w-4 h-4" />
-                                    </Button>
+                                    <Link to={`/verify/${cert.certificateNumber}`}>
+                                        <Button variant="outline" size="icon" className="border-gold/30 text-gold hover:bg-gold/10" title="تحقق">
+                                            <ExternalLink className="w-4 h-4" />
+                                        </Button>
+                                    </Link>
                                 </div>
                             </div>
                         </motion.div>
